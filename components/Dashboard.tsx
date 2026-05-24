@@ -48,17 +48,31 @@ function getTheme(grade: string): ThemeColors {
 export default function Dashboard() {
   // ── Store ─────────────────────────────────────────────────────────────────
   const {
-    currentUser: currentUserRaw,
-    globalTransactions, addTransaction, updateTransaction, removeTransaction, clearUserTransactions,
-    partners, setPartners, addPartner,
-    plan, setPlan,
-    documents, addDocument, updateDocument, removeDocument,
-    isSi60Sealed, setIsSi60Sealed,
-    quickFill, setQuickFill,
-    cloudSynced,
-  } = useAppStore();
+  currentUser: currentUserRaw,
+  globalTransactions, addTransaction, updateTransaction, removeTransaction, clearUserTransactions,
+  partners, setPartners, addPartner,
+  plan, setPlan,
+  documents, addDocument, updateDocument, removeDocument,
+  isSi60Sealed, setIsSi60Sealed,
+  quickFill, setQuickFill,
+  cloudSynced,
+} = useAppStore();
 
-  const currentUser = currentUserRaw!;
+useFirestoreSync();
+
+// ── Check authentication before declaring hooks/state dependent on user data ─
+if (!currentUserRaw) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <p className="font-mono text-xs text-blue-400 animate-pulse">
+        Loading session configurations...
+      </p>
+    </div>
+  );
+}
+
+// Safely cast now that the null check guard has executed successfully
+const currentUser = currentUserRaw;
 
   useFirestoreSync();
 
@@ -79,10 +93,10 @@ export default function Dashboard() {
 
   // ── Derived ───────────────────────────────────────────────────────────────
   const isViewer = useMemo(() => {
-    if (currentUser.email === 'viewer@farm.com') return true;
-    const record = partners.find(p => p.email === currentUser.email);
-    return record?.role === 'viewer' ?? false;
-  }, [currentUser, partners]);
+  if (currentUser.email === 'viewer@farm.com') return true;
+  const record = partners.find(p => p.email === currentUser.email);
+  return record?.role === 'viewer';
+}, [currentUser, partners]);
 
   const userTransactions = useMemo(
     () => globalTransactions.filter(t => t.userId === currentUser.id).sort((a, b) => b.timestamp - a.timestamp),
