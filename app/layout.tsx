@@ -1,27 +1,105 @@
 import type { Metadata } from 'next';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'OmniSight Financial AI | Unified Business Suite v16.0',
-  description: 'Rural business financial management suite',
+  title: 'OmniSight Financial AI | Godmode Unified v20.0',
+  description: 'AI-powered financial dashboard',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <meta name="theme-color" content="#1e3a8a" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Tailwind CSS CDN – same as original HTML */}
+        <script src="https://cdn.tailwindcss.com"></script>
+        {/* Google Fonts */}
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;700;800&family=Space+Grotesk:wght@500;700&display=swap"
           rel="stylesheet"
         />
+        {/* Custom CSS exactly as in the original HTML */}
+        <style>{`
+          body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0f172a 100%);
+            color: #f1f5f9;
+            overflow-x: hidden;
+          }
+          input[type="date"] { color-scheme: dark; }
+          .bg-grid {
+            background-image: 
+              linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
+          }
+          .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: background-color 0.5s ease, border-color 0.5s ease;
+          }
+          .glass-input {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #f1f5f9;
+            transition: all 0.3s ease;
+          }
+          .glass-input:focus:not(:disabled) {
+            border-color: #3b82f6;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            outline: none;
+            background: rgba(30, 41, 59, 0.8);
+          }
+          .glass-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: rgba(59, 130, 246, 0.1);
+          }
+          ::-webkit-scrollbar { width: 8px; height: 8px; }
+          ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+          ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #3b82f6, #1e3a8a); border-radius: 10px; }
+          .stat-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(30, 58, 138, 0.2) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+          }
+          .stat-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+          }
+          .animate-in { animation: fadeIn 0.4s ease-out forwards; }
+          @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .drop-zone-active {
+            border-color: #10b981 !important;
+            background: rgba(16, 185, 129, 0.1) !important;
+            transform: scale(1.02);
+          }
+          .scan-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: #3b82f6; box-shadow: 0 0 10px #3b82f6;
+            animation: scan 2s linear infinite; display: none;
+          }
+          .scanning .scan-line { display: block; }
+          @keyframes scan {
+            0% { top: 0; }
+            50% { top: 100%; }
+            100% { top: 0; }
+          }
+        `}</style>
       </head>
       <body>
         <div className="bg-grid" />
-        <ErrorBoundary>{children}</ErrorBoundary>
+        {children}
       </body>
     </html>
   );
