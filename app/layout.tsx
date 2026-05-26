@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: 'OmniSight Financial AI | Godmode Unified v20.0',
@@ -100,6 +101,7 @@ export default function RootLayout({
       <body>
         <div className="bg-grid" />
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
